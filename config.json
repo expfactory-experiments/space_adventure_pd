@@ -1,11 +1,13 @@
 {
-	"name": "Space Adventure Planning Depth New",
+	"name": "Space Adventure Task Version 2",
 	"template":"javascript",
 	"exp_id": "space_adventure_pd",
 	"url":"none yet",
 	"contributors": [
-		"Person1",
-		"Person2"
+		"Dimitrije Markovic; dimitrije.markovic@tu-dresden.de",
+		"Sia Ivova Hranova; sia.hranova@tu-dresden.de",
+		"Sascha Frölich; sascha.frölich@tu-dresden.de",
+        "Michael Smolka; michael.smolka@tu-dresden.de"
 	], 
 	"run": [
 		"js/jquery-3.5.1.min.js",
@@ -14,13 +16,11 @@
 		"style.css"
 	],
 	"time":90,
-	"reference": ["scientific publication"],
+	"reference": ["Version 1: https://doi.org/10.1038/s41598-023-33274-0"],
 	"publish":"False",
-	"notes": "notes we want to add",
-	"description": "a task inferring plannig depth",
+	"notes": "language switch from English to German in parameters.js, line 60 language = 'en' to 'de'",
+	"description": "a probabilistic sequential decision-making task",
 	"instructions": "follow instructions on screen"
 }
-
-
 
 

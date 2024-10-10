@@ -57,6 +57,7 @@ function assignValues(config){
 }
 config = JSON.parse(config);
 assignValues(config);
+language = 'en'
 
 // alert(mydata[0].age);
 

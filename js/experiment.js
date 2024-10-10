@@ -15,7 +15,7 @@
   
 function pushDataMain(){
   mainData.responses.RT = mainRTarray;
-  mainData.responses.keys = mainKeysArray;
+  mainData.responses.actions = mainKeysArray;
 
   mainData.states = mainStateArray;
   mainData.points = mainPointsArray;
@@ -917,6 +917,7 @@ if(points <= 0){
   experimentFinished = true;
   uploadResults();
 
+// NOWDEBUG
 } else if (((trial % 25 == 24) && trial <101)|| trial == lastTrial) {
 // } else if (trial % 4 == 1 || trial == lastTrial) {
   displayBlockTransition();
@@ -977,7 +978,7 @@ blockTransition = true;
 };
 
 function hideBlockTransition() {
-
+// NOWDEBUG
 if ((trial % 25) == 24 && trial < 101) {
 // if ((trial % 4) == 1 && trial < 100) {
   $('#block-transition').addClass('inactive');
@@ -1218,6 +1219,33 @@ function debuggingAfterUncertainty(isDebugging) {
 };
 
 }
+
+
+function importInstructions(language) {
+
+  $.ajax({
+
+     type: 'GET',
+     url: '/space_adventure_pd/instruction_files/' + language + '.html',
+
+     success: function (msg) {
+
+      $('#screen').html(msg);
+      $('#intro-1').removeClass('inactive')
+      game = $('#game');
+      rocket = $('#rocket');
+      planets = $('#planets div');
+      squareClass= $('.square');
+      squaresWrapper = $('#squares-wrapper');
+
+     },
+
+     error: function () {
+      alert('Failed to import instructions file. Please talk to maintainer.')
+     }
+  });
+}
+
 //////////////////////////////////////////////////////////
 ////////             PARAMETERS               ////////////
 gameover = false;
@@ -1241,17 +1269,18 @@ isReverting = false;
 
 // NOWDEBUG
 lastTrial = mainTurns.length - 1
-// lastTrial = 5
+// lastTrial = 12
 ////////////////////////////////////////////////////////
 
 mainData = {
 age: 0,
 gender: 0,
 group: 0,
-keybinding: 1,
+balancingCondition: 1,
+startingPoints:350,
 responses: {
   RT: 0,
-  keys: 0
+  actions: 0
   },
 states: 0,
 points: 0,
@@ -1356,6 +1385,7 @@ keys = selectKeybindings()
 rt = [];
 // move = keys[0]
 // jump = keys[1]
+
 move = 77
 jump = 89
 moves = [[jump, move],[jump, move], [move, jump, move], [jump, jump, move]];
@@ -1370,11 +1400,9 @@ playing = false;
 
 
 $( document ).ready(function() {
-game = $('#game');
-rocket = $('#rocket');
-planets = $('#planets div');
-squareClass= $('.square');
-squaresWrapper = $('#squares-wrapper');
+
+  importInstructions(language)            // this is the function that imports the html as desired
+
 
 // debugMain(true)
 // debugUncertainty(true)
@@ -1527,23 +1555,29 @@ $( document ).keydown(function(event){
     }
   } else if (isMain) {
       if(screen == 27){
-        screenSwitch('#intro-complete', '#main-intro-text');
-        trial = -1;
-        keyPress = []; stimulusDisplay = []; animationEnd = []
-        mainRTarray = []; mainPointsArray = []; mainStateArray = []; mainKeysArray = [];
-
+        if (keycode == 39){
+          screenSwitch('#intro-complete', '#main-intro-text');
+          points = mainData.startingPoints;
+          trial = -1;
+          keyPress = []; stimulusDisplay = []; animationEnd = []
+          mainRTarray = []; mainPointsArray = []; mainStateArray = []; mainKeysArray = [];
+        }
       } else {
         if (!$('#main-intro-text').hasClass('inactive') || !$('#main-intro-text-gameover').hasClass('inactive')) {
-        // $('#game-container').removeClass('asteroids')
-        $('#main-intro-text').addClass('inactive');
-        keyPress = []; stimulusDisplay = []; animationEnd = []
-        mainRTarray = []; mainPointsArray = []; mainStateArray = []; mainKeysArray = [];
-        finishTurn();
+          if (keycode == 39){
+            // $('#game-container').removeClass('asteroids')
+          $('#main-intro-text').addClass('inactive');
+          keyPress = []; stimulusDisplay = []; animationEnd = []
+          mainRTarray = []; mainPointsArray = []; mainStateArray = []; mainKeysArray = [];
+          finishTurn();
+          }
         } else if(!blockTransition) {
         playTurn(mainCallback);
         } else {
-        hideBlockTransition();
-        finishTurn();
+          if(keycode == 39){
+            hideBlockTransition();
+            finishTurn();
+          }
         }
       }
   }
